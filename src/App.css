@@ -28,7 +28,7 @@ li {
   font-weight: 400;
   padding: 1rem;
 }
-
+/* 
 .btn-green {
   background-color: #007c0a;
   border-radius: 50%;
@@ -39,14 +39,14 @@ li {
   background-color: #870000;
   border-radius: 50%;
   color: #ff0000;
-}
+} */
 
-.btn-blue {
+/* .btn-blue {
   background-color: #009dff;
   border-radius: 50%;
   border: 1px solid #005685;
   color: #005685;
-}
+} */
 
 .btn-black {
   background-color: #cbcbcb;

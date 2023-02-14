@@ -1,9 +1,12 @@
 import { useState } from "react";
 import "./App.css";
-import List from "./components/List";
 import { TextField, Button } from "@mui/material";
+import List from "@mui/material/List";
+import TodoList from "./components/TodoList";
+import Typography from "@mui/material/Typography";
+
 function App() {
-  const [inputText, setInputText] = useState(" ");
+  const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);
 
   function addToList() {
@@ -12,31 +15,30 @@ function App() {
   }
 
   function deleteFn(id) {
-    const filteredList = list.filter((item, index) => index !== id);
-    setList(filteredList);
+    const updatedList = [...list];
+    updatedList.splice(id, 1);
+    setList(list);
   }
 
   return (
     <div className="App">
-      <h1>To-Do List</h1>
+      <Typography variant="h3">Todo-List</Typography>
       <TextField
         color="secondary"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         focused
       />
-
-      <Button color="secondary" onClick={addToList}>
+      <Button disabled={!inputText} color="secondary" onClick={addToList}>
         Add
       </Button>
-
-      <ul>
+      <List>
         {list.map((item, index) => {
           return (
-            <List key={index} item={item} deleteFn={deleteFn} id={index} />
+            <TodoList key={index} item={item} deleteFn={deleteFn} id={index} />
           );
         })}
-      </ul>
+      </List>
     </div>
   );
 }
