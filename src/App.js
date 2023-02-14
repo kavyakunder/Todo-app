@@ -11,13 +11,13 @@ function App() {
 
   function addToList() {
     setList([...list, inputText]);
-    setInputText(" ");
+    setInputText("");
   }
 
   function deleteFn(id) {
     const updatedList = [...list];
     updatedList.splice(id, 1);
-    setList(list);
+    setList(updatedList);
   }
 
   return (
@@ -29,10 +29,16 @@ function App() {
         onChange={(e) => setInputText(e.target.value)}
         focused
       />
-      <Button disabled={!inputText} color="secondary" onClick={addToList}>
+      <Button
+        variant="contained"
+        disabled={!inputText}
+        color="secondary"
+        onClick={addToList}
+        sx={{ m: 1 }}
+      >
         Add
       </Button>
-      <List>
+      <List sx={{ margin: "10px auto" }}>
         {list.map((item, index) => {
           return (
             <TodoList key={index} item={item} deleteFn={deleteFn} id={index} />

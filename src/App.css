@@ -4,7 +4,7 @@
 
 ul {
   align-items: center;
-  background-color: #f9d6f8;
+  background-color: #ffeafe;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -23,11 +23,11 @@ ul {
   padding: 1rem;
 }
 
-li {
+/* li {
   font-size: 1rem;
   font-weight: 400;
   padding: 1rem;
-}
+} */
 /* 
 .btn-green {
   background-color: #007c0a;
@@ -47,13 +47,13 @@ li {
   border: 1px solid #005685;
   color: #005685;
 } */
-
+/* 
 .btn-black {
   background-color: #cbcbcb;
   border-radius: 50%;
   border: 1px solid #4e4e4e;
   color: #565656;
-}
+} */
 
 @media screen and (max-width: 700px) {
   body {

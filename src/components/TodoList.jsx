@@ -44,8 +44,11 @@ function TodoList({ item, deleteFn, id }) {
           <Button color="info" onClick={handleEdit}>
             <EditIcon />
           </Button>
-          <Button color="dark" onClick={() => deleteFn(id)}>
-            <DeleteForeverIcon className="btn-black" />
+          <Button onClick={() => deleteFn(id)}>
+            <DeleteForeverIcon
+              style={{ color: "grey" }}
+              className="btn-black"
+            />
           </Button>
         </>
       )}
