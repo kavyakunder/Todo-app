@@ -1,25 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, ListItem, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { useState } from "react";
 
-function TodoList({ item, deleteFn, id }) {
-  const [edit, setEdit] = useState(false);
-  const [editItem, setEditItem] = useState(item);
+function TodoList({ item, deleteFn, id, setList, list }) {
+  const [editItem, setEditItem] = useState(null);
 
   const handleEdit = () => {
-    setEdit(true);
+    setEditItem(item);
   };
 
   const handleCancel = () => {
-    setEdit(false);
+    setEditItem(null);
   };
 
-  const handleSave = () => {
-    setEdit(false);
+  const handleSave = (id) => {
+    const updatedList = list.map((item, index) => {
+      if (id === index) {
+        return editItem;
+      } else {
+        return item;
+      }
+    });
+    setList(updatedList);
+    setEditItem(null);
   };
 
   const handleInputChange = (event) => {
@@ -28,23 +34,38 @@ function TodoList({ item, deleteFn, id }) {
 
   return (
     <div className="list">
-      {edit ? (
+      {editItem ? (
         <>
-          <TextField value={editItem} onChange={handleInputChange} />
-          <Button color="success" onClick={handleSave} disabled={!editItem}>
+          <TextField
+            data-testid="input-edit"
+            value={editItem}
+            onChange={handleInputChange}
+          />
+          <Button
+            data-testid="btn-save"
+            color="success"
+            onClick={() => handleSave(id)}
+            disabled={!editItem}
+          >
             <CheckCircleIcon />
           </Button>
-          <Button color="error" onClick={handleCancel} disabled={!editItem}>
+          <Button data-testid="btn-cancel" color="error" onClick={handleCancel}>
             <CancelIcon />
           </Button>
         </>
       ) : (
         <>
-          <ListItem key={id}>{editItem}</ListItem>
-          <Button color="info" onClick={handleEdit}>
+          <ListItem data-testid="list-item" key={id}>
+            {item}
+          </ListItem>
+          <Button
+            data-testid="btn-edit"
+            color="info"
+            onClick={() => handleEdit(id)}
+          >
             <EditIcon />
           </Button>
-          <Button onClick={() => deleteFn(id)}>
+          <Button data-testid="btn-delete" onClick={() => deleteFn(id)}>
             <DeleteForeverIcon
               style={{ color: "grey" }}
               className="btn-black"
