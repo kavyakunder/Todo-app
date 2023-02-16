@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 import List from "@mui/material/List";
 import TodoList from "./components/TodoList";
 import Typography from "@mui/material/Typography";
@@ -9,8 +8,11 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);
 
+  // const classes = useAppStyles();
   const addToList = () => {
-    setList([...list, inputText]);
+    const newList = [...list, inputText];
+    setList(newList);
+    localStorage.setItem("list", JSON.stringify(newList));
     setInputText("");
   };
 
@@ -18,56 +20,72 @@ function App() {
     const updatedList = [...list];
     updatedList.splice(id, 1);
     setList(updatedList);
+    localStorage.setItem("list", JSON.stringify(updatedList));
+  };
+
+  const handleChange = (id, editItem) => {
+    const updatedList = [...list];
+    updatedList[id] = editItem;
+    setList(updatedList);
+    localStorage.setItem("list", JSON.stringify(updatedList));
   };
 
   useEffect(() => {
     setList(JSON.parse(localStorage.getItem("list")) || []);
-  }, [list]);
-
-  useEffect(() => {
-    localStorage.setItem("list", JSON.stringify(list));
-  }, [list]);
+  }, []);
 
   return (
     <div className="App">
-      <Typography variant="h3" data-testid="heading">
+      <Typography
+        textAlign="center"
+        m={3}
+        variant="h3"
+        data-testid="heading"
+        marginTop="1"
+      >
         Todo-List
       </Typography>
-      <TextField
-        inputProps={{ "data-testid": "input-text" }}
-        color="secondary"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        focused
-      />
-      <Button
-        data-testid="btn-add"
-        variant="contained"
-        disabled={!inputText}
-        color="secondary"
-        onClick={addToList}
-        sx={{ m: 1 }}
-      >
-        Add
-      </Button>
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <TextField
+          inputProps={{ "data-testid": "input-text" }}
+          color="secondary"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          focused
+        />
+        <Button
+          data-testid="btn-add"
+          variant="contained"
+          disabled={!inputText}
+          color="secondary"
+          onClick={addToList}
+          sx={{ m: 1 }}
+        >
+          Add
+        </Button>
+      </Box>
       <List
         data-testid="list"
         sx={{
-          margin: "10px auto",
+          width: "65%",
+          bgcolor: "#F6C7FF",
+          mx: "auto",
+          my: 6,
+          padding: "3",
+          borderRadius: "10px",
+          border: 2,
+          borderColor: "#9C27B0",
         }}
       >
-        {list.map((item, index) => {
-          return (
-            <TodoList
-              key={index}
-              item={item}
-              deleteFn={deleteFn}
-              id={index}
-              list={list}
-              setList={setList}
-            />
-          );
-        })}
+        {list.map((item, index) => (
+          <TodoList
+            key={index}
+            item={item}
+            deleteFn={deleteFn}
+            id={index}
+            handleChange={handleChange}
+          />
+        ))}
       </List>
     </div>
   );
