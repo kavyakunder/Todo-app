@@ -2,12 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { TodoList } from "./TodoList";
 
 describe("Todo List", () => {
-  const item = "abc";
-  const id = 1;
-  const handleChange = jest.fn();
-
   it("save an edit", () => {
-    render(<TodoList item={item} id={id} handleChange={handleChange} />);
+    render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
 
     fireEvent.click(btnEdit);
@@ -17,13 +13,19 @@ describe("Todo List", () => {
 
     fireEvent.change(inputEdit, { target: { value: "abc2" } });
     fireEvent.click(btnSave);
+    expect(mockHandleChange).toHaveBeenCalled();
+  });
 
-    // const list = screen.getByTestId("list-item");
-    // expect(list).toHaveTextContent("abc2");
+  it("render delete functionality", () => {
+    render(<TodoList {...mockProps} />);
+    const btnDelete = screen.getByTestId("btn-delete");
+
+    fireEvent.click(btnDelete);
+    expect(mockDelete).toHaveBeenCalled();
   });
 
   it("cancel an edit", () => {
-    render(<TodoList item={item} id={id} />);
+    render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
     fireEvent.click(btnEdit);
 
@@ -31,3 +33,13 @@ describe("Todo List", () => {
     fireEvent.click(btnCancel);
   });
 });
+
+const mockHandleChange = jest.fn();
+const mockDelete = jest.fn();
+
+const mockProps = {
+  item: "abc",
+  deleteFn: mockDelete,
+  id: 1,
+  handleChange: mockHandleChange,
+};
