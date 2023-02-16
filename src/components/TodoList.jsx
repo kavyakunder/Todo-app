@@ -32,34 +32,36 @@ function TodoList({ item, deleteFn, id, handleChange }) {
           container
           spacing={2}
           direction="row"
-          justifyContent="space-around"
+          justifyContent="space-between"
           alignItems="center"
         >
-          <Grid item xs={8}>
+          <Grid item xs={4}>
             <TextField
               data-testid="input-edit"
               value={editItem}
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={2}>
-            <Button
-              data-testid="btn-save"
-              color="success"
-              onClick={() => handleSave(id)}
-              disabled={!editItem}
-            >
-              <CheckCircleIcon />
-            </Button>
-          </Grid>
-          <Grid item xs={2}>
-            <Button
-              data-testid="btn-cancel"
-              color="error"
-              onClick={handleCancel}
-            >
-              <CancelIcon />
-            </Button>
+          <Grid container item xs={4} justifyContent="flex-end">
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-save"
+                color="success"
+                onClick={() => handleSave(id)}
+                disabled={!editItem}
+              >
+                <CheckCircleIcon />
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-cancel"
+                color="error"
+                onClick={handleCancel}
+              >
+                <CancelIcon />
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       ) : (
@@ -68,30 +70,32 @@ function TodoList({ item, deleteFn, id, handleChange }) {
             container
             spacing={2}
             direction="row"
-            justifyContent="space-around"
+            justifyContent="space-between"
             alignItems="center"
           >
             <Grid item xs={8}>
-              <ListItem data-testid="list-item" key={id}>
+              <ListItem data-testid="list-item" key={id} paddingLeft={10}>
                 {item}
               </ListItem>
             </Grid>
-            <Grid item xs={2}>
-              <Button
-                data-testid="btn-edit"
-                color="info"
-                onClick={() => handleEdit(id)}
-              >
-                <EditIcon />
-              </Button>
-            </Grid>
-            <Grid item xs={2}>
-              <Button data-testid="btn-delete" onClick={() => deleteFn(id)}>
-                <DeleteForeverIcon
-                  style={{ color: "#2A3038" }}
-                  className="btn-black"
-                />
-              </Button>
+            <Grid container item xs={4} justifyContent="flex-end">
+              <Grid item xs={4}>
+                <Button
+                  data-testid="btn-edit"
+                  color="info"
+                  onClick={() => handleEdit(id)}
+                >
+                  <EditIcon />
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button data-testid="btn-delete" onClick={() => deleteFn(id)}>
+                  <DeleteForeverIcon
+                    style={{ color: "#2A3038" }}
+                    className="btn-black"
+                  />
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </>

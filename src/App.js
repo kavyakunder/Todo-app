@@ -3,12 +3,12 @@ import { TextField, Button, Box } from "@mui/material";
 import List from "@mui/material/List";
 import TodoList from "./components/TodoList";
 import Typography from "@mui/material/Typography";
-
+import { useAppStyles } from "./App.style";
 function App() {
   const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);
 
-  // const classes = useAppStyles();
+  const classes = useAppStyles();
   const addToList = () => {
     const newList = [...list, inputText];
     setList(newList);
@@ -64,19 +64,7 @@ function App() {
           Add
         </Button>
       </Box>
-      <List
-        data-testid="list"
-        sx={{
-          width: "65%",
-          bgcolor: "#F6C7FF",
-          mx: "auto",
-          my: 6,
-          padding: "3",
-          borderRadius: "10px",
-          border: 2,
-          borderColor: "#9C27B0",
-        }}
-      >
+      <List data-testid="list" className={classes.list}>
         {list.map((item, index) => (
           <TodoList
             key={index}
