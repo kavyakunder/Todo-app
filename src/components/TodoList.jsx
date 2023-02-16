@@ -5,7 +5,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-function TodoList({ item, deleteFn, id, handleChange }) {
+const TodoList = ({ item, deleteFn, id, handleChange }) => {
   const [editItem, setEditItem] = useState(null);
 
   const handleEdit = () => {
@@ -37,7 +37,7 @@ function TodoList({ item, deleteFn, id, handleChange }) {
         >
           <Grid item xs={4}>
             <TextField
-              data-testid="input-edit"
+              inputProps={{ "data-testid": "input-edit" }}
               value={editItem}
               onChange={handleInputChange}
             />
@@ -74,7 +74,7 @@ function TodoList({ item, deleteFn, id, handleChange }) {
             alignItems="center"
           >
             <Grid item xs={8}>
-              <ListItem data-testid="list-item" key={id} paddingLeft={10}>
+              <ListItem data-testid="list-item" key={id} paddingleft={10}>
                 {item}
               </ListItem>
             </Grid>
@@ -102,6 +102,6 @@ function TodoList({ item, deleteFn, id, handleChange }) {
       )}
     </>
   );
-}
+};
 
-export default TodoList;
+export { TodoList };
