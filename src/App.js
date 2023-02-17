@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import List from "@mui/material/List";
-import TodoList from "./components/TodoList";
 import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
+import { TodoList } from "./components/TodoList";
 function App() {
   const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);
@@ -50,7 +50,7 @@ function App() {
           inputProps={{ "data-testid": "input-text" }}
           color="secondary"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
+          onChange={(e) => setInputText(e.target.value.trim())}
           focused
         />
         <Button
