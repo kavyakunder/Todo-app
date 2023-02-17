@@ -50,7 +50,7 @@ function App() {
           inputProps={{ "data-testid": "input-text" }}
           color="secondary"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
+          onChange={(e) => setInputText(e.target.value.trim())}
           focused
         />
         <Button
