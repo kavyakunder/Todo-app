@@ -4,7 +4,6 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
 import { TodoList } from "./components/TodoList";
-
 function App() {
   const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);

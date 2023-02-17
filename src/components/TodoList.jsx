@@ -74,7 +74,7 @@ export const TodoList = ({ item, deleteFn, id, handleChange }) => {
             alignItems="center"
           >
             <Grid item xs={8}>
-              <ListItem data-testid="list-item" key={id} paddingleft={10}>
+              <ListItem data-testid="list-item" key={id} paddingLeft={10}>
                 {item}
               </ListItem>
             </Grid>

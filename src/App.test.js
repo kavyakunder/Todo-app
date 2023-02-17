@@ -36,7 +36,7 @@ describe("render App component", () => {
     expect(btnAdd).toBeDisabled();
   });
 
-  it("render add functionality", async () => {
+  it("implements add functionality", async () => {
     render(<App />);
     const inputText = screen.getByTestId("input-text");
     const btnAdd = screen.getByTestId("btn-add");

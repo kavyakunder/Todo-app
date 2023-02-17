@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { TodoList } from "./TodoList";
 
 describe("Todo List", () => {
-  it("save an edit", () => {
+  it("implement save functionality", () => {
     render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
 
@@ -16,7 +16,7 @@ describe("Todo List", () => {
     expect(mockHandleChange).toHaveBeenCalled();
   });
 
-  it("render delete functionality", () => {
+  it("implement delete functionality", () => {
     render(<TodoList {...mockProps} />);
     const btnDelete = screen.getByTestId("btn-delete");
 
@@ -24,7 +24,7 @@ describe("Todo List", () => {
     expect(mockDelete).toHaveBeenCalled();
   });
 
-  it("cancel an edit", () => {
+  it("implement edit functionality", () => {
     render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
     fireEvent.click(btnEdit);
