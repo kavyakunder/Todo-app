@@ -22,7 +22,7 @@ export const TodoList = ({ item, deleteFn, id, handleChange }) => {
   };
 
   const handleInputChange = (event) => {
-    setEditItem(event.target.value);
+    setEditItem(event.target.value.trim());
   };
 
   return (
@@ -73,8 +73,8 @@ export const TodoList = ({ item, deleteFn, id, handleChange }) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Grid item xs={8}>
-              <ListItem data-testid="list-item" key={id} paddingLeft={10}>
+            <Grid item xs={8} paddingLeft={10}>
+              <ListItem data-testid="list-item" key={id}>
                 {item}
               </ListItem>
             </Grid>
