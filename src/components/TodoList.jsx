@@ -5,7 +5,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const TodoList = ({ item, deleteFn, id, handleChange }) => {
+export const TodoList = ({ item, deleteFn, id, handleChange }) => {
   const [editItem, setEditItem] = useState(null);
 
   const handleEdit = () => {
@@ -103,5 +103,3 @@ const TodoList = ({ item, deleteFn, id, handleChange }) => {
     </>
   );
 };
-
-export { TodoList };
