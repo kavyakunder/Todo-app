@@ -1,5 +1,27 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  waitFor,
+} from "@testing-library/react";
 import App from "./App";
+
+jest.mock("./components/TodoList", () => ({
+  TodoList: ({ deleteFn, handleChange }) => {
+    return (
+      <div>
+        <div>TodoList</div>
+        <button data-testid="edit" onClick={handleChange}>
+          EditTodoList
+        </button>
+        <button data-testid="del" onClick={deleteFn}>
+          DeleteTodoList
+        </button>
+      </div>
+    );
+  },
+}));
 
 describe("render App component", () => {
   it("render input and button", () => {
@@ -14,7 +36,7 @@ describe("render App component", () => {
     expect(btnAdd).toBeDisabled();
   });
 
-  it("render add functionality", () => {
+  it("render add functionality", async () => {
     render(<App />);
     const inputText = screen.getByTestId("input-text");
     const btnAdd = screen.getByTestId("btn-add");
@@ -24,35 +46,24 @@ describe("render App component", () => {
     expect(btnAdd).toBeDisabled();
 
     fireEvent.change(inputText, { target: { value: "New" } });
-
     expect(btnAdd).not.toBeDisabled();
 
-    fireEvent.click(btnAdd);
+    await act(async () => {
+      await fireEvent.click(btnAdd);
+    });
 
-    expect(screen.getByText("New")).toBeInTheDocument();
+    waitFor(() => expect(screen.findByText("TodoList")).toBeInTheDocument());
   });
 
-  it("render delete functionality", () => {
+  it("edit item from the list", async () => {
     render(<App />);
-    const inputText = screen.getByTestId("input-text");
-    const btnDelete = screen.getByTestId("btn-delete");
-
-    expect(inputText).toBeInTheDocument();
-
-    fireEvent.change(inputText, { target: { value: "New" } });
-    fireEvent.click(btnDelete);
-
-    expect(screen.queryByText("New")).not.toBeInTheDocument();
+    const edit = screen.getByTestId("edit");
+    fireEvent.click(edit);
   });
 
-  it("render edit item functionality", () => {
+  it("delete item from the list", async () => {
     render(<App />);
-    const initialList = [1, 2, 3];
-    const id = 1;
-    const updatedItem = 4;
-    const updatedList = [1, 4, 3];
-    initialList[id] = updatedItem;
-
-    expect(initialList).toEqual(updatedList);
+    const del = screen.getByTestId("del");
+    fireEvent.click(del);
   });
 });

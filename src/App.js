@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import List from "@mui/material/List";
-import { TodoList } from "./components/TodoList";
 import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
+import { TodoList } from "./components/TodoList";
+
 function App() {
   const [inputText, setInputText] = useState("");
   const [list, setList] = useState([]);
@@ -28,7 +29,6 @@ function App() {
     updatedList[id] = editItem;
     setList(updatedList);
     localStorage.setItem("list", JSON.stringify(updatedList));
-    console.log("list is", list);
   };
 
   useEffect(() => {
