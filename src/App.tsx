@@ -8,7 +8,7 @@ import { TodoList } from "./components/TodoList";
 
 function App(): JSX.Element {
   const [inputText, setInputText] = useState<string>("");
-  const [list, setList] = useState<string[]>([]);
+  const [list, setList] = useState<Array<string>>([]);
 
   const classes = useAppStyles();
   const addToList = (): void => {
@@ -33,7 +33,7 @@ function App(): JSX.Element {
   };
 
   useEffect(() => {
-    setList(JSON.parse(localStorage.getItem("list") ?? "") || []);
+    setList(JSON.parse(localStorage.getItem("list") || "[]"));
   }, []);
 
   return (

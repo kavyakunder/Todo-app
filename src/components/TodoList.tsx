@@ -5,18 +5,18 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-type TodoListProps = {
-  item: string;
+export type TodoListProps = {
   deleteFn: (id: number) => void;
-  id: number;
   handleChange: (id: number, editItem: string | null) => void;
+  id: number;
+  item: string;
 };
 
 export const TodoList = ({
-  item,
   deleteFn,
-  id,
   handleChange,
+  id,
+  item,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
 
@@ -95,7 +95,7 @@ export const TodoList = ({
                 <Button
                   data-testid="btn-edit"
                   color="info"
-                  onClick={() => handleEdit()}
+                  onClick={handleEdit}
                 >
                   <EditIcon />
                 </Button>

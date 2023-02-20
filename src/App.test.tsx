@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  fireEvent,
-  render,
-  screen,
-  act,
-  waitFor,
-} from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import App from "./App";
 
 type TodoListProps = {
@@ -54,11 +48,9 @@ describe("render App component", () => {
     fireEvent.change(inputText, { target: { value: "New" } });
     expect(btnAdd).not.toBeDisabled();
 
-    await (async () => {
-      await fireEvent.click(btnAdd);
-    });
+    fireEvent.click(btnAdd);
 
-    waitFor(() => expect(screen.getByText("TodoList")).toBeInTheDocument());
+    expect(screen.getByText("TodoList")).toBeInTheDocument();
   });
 
   it("edit item from the list", async () => {

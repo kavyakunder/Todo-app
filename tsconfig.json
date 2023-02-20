@@ -9,7 +9,7 @@
 
     "strict": true /* Enable all strict type-checking options. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "lib": ["es6", "dom"],
+    "lib": ["es6", "dom", "es5", "dom.iterable"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true
