@@ -6,15 +6,19 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 type TodoListProps = {
-  item: string,
-  deleteFn: (id: number)=>void,
-  id: number,
-  handleChange: (id: number, editItem: string|null) => void,
+  item: string;
+  deleteFn: (id: number) => void;
+  id: number;
+  handleChange: (id: number, editItem: string | null) => void;
 };
 
-export const TodoList = ({ item, deleteFn, id, handleChange }: TodoListProps) => {
-
-  const [editItem, setEditItem] = useState<string|null>(null);
+export const TodoList = ({
+  item,
+  deleteFn,
+  id,
+  handleChange,
+}: TodoListProps) => {
+  const [editItem, setEditItem] = useState<string | null>(null);
 
   const handleEdit = () => {
     setEditItem(item);
@@ -24,19 +28,19 @@ export const TodoList = ({ item, deleteFn, id, handleChange }: TodoListProps) =>
     setEditItem(null);
   };
 
-  const handleSave = (id:number) => {
+  const handleSave = (id: number) => {
     handleChange(id, editItem);
     setEditItem(null);
   };
 
-  const handleInputChange = (event:any) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEditItem(event.target.value.trim());
   };
 
   return (
     <>
       {editItem ? (
-        < Grid
+        <Grid
           container
           spacing={2}
           direction="row"
@@ -69,9 +73,9 @@ export const TodoList = ({ item, deleteFn, id, handleChange }: TodoListProps) =>
               >
                 <CancelIcon />
               </Button>
-            </ Grid>
+            </Grid>
           </Grid>
-        </ Grid>
+        </Grid>
       ) : (
         <>
           <Grid
@@ -81,11 +85,11 @@ export const TodoList = ({ item, deleteFn, id, handleChange }: TodoListProps) =>
             justifyContent="space-between"
             alignItems="center"
           >
-            < Grid item xs={8} paddingLeft={10}>
+            <Grid item xs={8} paddingLeft={10}>
               <ListItem data-testid="list-item" key={id}>
                 {item}
               </ListItem>
-            </ Grid>
+            </Grid>
             <Grid container item xs={4} justifyContent="flex-end">
               <Grid item xs={4}>
                 <Button
@@ -103,9 +107,9 @@ export const TodoList = ({ item, deleteFn, id, handleChange }: TodoListProps) =>
                     className="btn-black"
                   />
                 </Button>
-              </ Grid>
-            </ Grid>
-          </ Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </>
       )}
     </>

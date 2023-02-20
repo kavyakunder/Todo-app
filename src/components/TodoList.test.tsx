@@ -1,6 +1,13 @@
+import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { TodoList } from "./TodoList";
 
+type mockTodoList = {
+  item: string;
+  deleteFn: () => void;
+  id: number;
+  handleChange: () => void;
+};
 describe("Todo List", () => {
   it("implement save functionality", () => {
     render(<TodoList {...mockProps} />);
@@ -37,7 +44,7 @@ describe("Todo List", () => {
 const mockHandleChange = jest.fn();
 const mockDelete = jest.fn();
 
-const mockProps = {
+const mockProps: mockTodoList = {
   item: "abc",
   deleteFn: mockDelete,
   id: 1,

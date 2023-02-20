@@ -1,37 +1,39 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
 import { TodoList } from "./components/TodoList";
-function App() {
-  const [inputText, setInputText] = useState("");
-  const [list, setList] = useState([]);
+
+function App(): JSX.Element {
+  const [inputText, setInputText] = useState<string>("");
+  const [list, setList] = useState<string[]>([]);
 
   const classes = useAppStyles();
-  const addToList = () => {
+  const addToList = (): void => {
     const newList = [...list, inputText];
     setList(newList);
     localStorage.setItem("list", JSON.stringify(newList));
     setInputText("");
   };
 
-  const deleteFn = (id) => {
+  const deleteFn = (id: number): void => {
     const updatedList = [...list];
     updatedList.splice(id, 1);
     setList(updatedList);
     localStorage.setItem("list", JSON.stringify(updatedList));
   };
 
-  const handleChange = (id, editItem) => {
+  const handleChange = (id: number, editItem: string | null): void => {
     const updatedList = [...list];
-    updatedList[id] = editItem;
+    updatedList[id] = editItem?.trim() ?? "";
     setList(updatedList);
     localStorage.setItem("list", JSON.stringify(updatedList));
   };
 
   useEffect(() => {
-    setList(JSON.parse(localStorage.getItem("list")) || []);
+    setList(JSON.parse(localStorage.getItem("list") ?? "") || []);
   }, []);
 
   return (
