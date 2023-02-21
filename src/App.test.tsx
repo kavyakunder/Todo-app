@@ -1,14 +1,9 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import App from "./App";
-
-type TodoListProps = {
-  deleteFn: () => void;
-  handleChange: () => void;
-};
+import App, { AppProps } from "./App";
 
 jest.mock("./components/TodoList", () => ({
-  TodoList: ({ deleteFn, handleChange }: TodoListProps) => {
+  TodoList: ({ deleteFn, handleChange }: AppProps) => {
     return (
       <div>
         <div>TodoList</div>

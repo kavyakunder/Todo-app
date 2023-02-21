@@ -6,6 +6,11 @@ import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
 import { TodoList } from "./components/TodoList";
 
+export type AppProps = {
+  deleteFn: () => void;
+  handleChange: () => void;
+};
+
 function App(): JSX.Element {
   const [inputText, setInputText] = useState<string>("");
   const [list, setList] = useState<Array<string>>([]);
