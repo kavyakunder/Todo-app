@@ -5,8 +5,20 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-export const TodoList = ({ item, deleteFn, id, handleChange }) => {
-  const [editItem, setEditItem] = useState(null);
+export type TodoListProps = {
+  deleteFn: (id: number) => void;
+  handleChange: (id: number, editItem: string | null) => void;
+  id: number;
+  item: string;
+};
+
+export const TodoList = ({
+  deleteFn,
+  handleChange,
+  id,
+  item,
+}: TodoListProps) => {
+  const [editItem, setEditItem] = useState<string | null>(null);
 
   const handleEdit = () => {
     setEditItem(item);
@@ -16,12 +28,12 @@ export const TodoList = ({ item, deleteFn, id, handleChange }) => {
     setEditItem(null);
   };
 
-  const handleSave = (id) => {
+  const handleSave = (id: number) => {
     handleChange(id, editItem);
     setEditItem(null);
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEditItem(event.target.value.trim());
   };
 
@@ -83,7 +95,7 @@ export const TodoList = ({ item, deleteFn, id, handleChange }) => {
                 <Button
                   data-testid="btn-edit"
                   color="info"
-                  onClick={() => handleEdit(id)}
+                  onClick={handleEdit}
                 >
                   <EditIcon />
                 </Button>

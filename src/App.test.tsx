@@ -1,14 +1,9 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  act,
-  waitFor,
-} from "@testing-library/react";
-import App from "./App";
+import React from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import App, { AppProps } from "./App";
 
 jest.mock("./components/TodoList", () => ({
-  TodoList: ({ deleteFn, handleChange }) => {
+  TodoList: ({ deleteFn, handleChange }: AppProps) => {
     return (
       <div>
         <div>TodoList</div>
@@ -48,11 +43,9 @@ describe("render App component", () => {
     fireEvent.change(inputText, { target: { value: "New" } });
     expect(btnAdd).not.toBeDisabled();
 
-    await act(async () => {
-      await fireEvent.click(btnAdd);
-    });
+    fireEvent.click(btnAdd);
 
-    waitFor(() => expect(screen.findByText("TodoList")).toBeInTheDocument());
+    expect(screen.getByText("TodoList")).toBeInTheDocument();
   });
 
   it("edit item from the list", async () => {
