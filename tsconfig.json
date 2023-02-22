@@ -9,9 +9,19 @@
 
     "strict": true /* Enable all strict type-checking options. */,
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "lib": ["es6", "dom", "es5", "dom.iterable"],
+    "lib": ["es6", "dom"],
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true
-  }
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "./cypress.config.ts",
+    "cypress.config.ts",
+    "cypress/**/*.ts",
+    "cypress.config.ts",
+    "node_modules/cypress*/*.ts"
+  ]
 }
