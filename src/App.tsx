@@ -37,6 +37,12 @@ function App(): JSX.Element {
     localStorage.setItem("list", JSON.stringify(updatedList));
   };
 
+  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal = event.target.value;
+    inputVal.trim();
+    setInputText(inputVal);
+  };
+
   useEffect(() => {
     setList(JSON.parse(localStorage.getItem("list") || "[]"));
   }, []);
@@ -57,13 +63,13 @@ function App(): JSX.Element {
           inputProps={{ "data-testid": "input-text" }}
           color="secondary"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value.trim())}
+          onChange={inputHandler}
           focused
         />
         <Button
           data-testid="btn-add"
           variant="contained"
-          disabled={!inputText}
+          disabled={!inputText || /^\s*$/.test(inputText)}
           color="secondary"
           onClick={addToList}
           sx={{ m: 1 }}

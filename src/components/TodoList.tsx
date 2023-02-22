@@ -34,7 +34,9 @@ export const TodoList = ({
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditItem(event.target.value.trim());
+    const inputValEdit = event.target.value;
+    inputValEdit.trim();
+    setEditItem(inputValEdit);
   };
 
   return (
@@ -60,7 +62,7 @@ export const TodoList = ({
                 data-testid="btn-save"
                 color="success"
                 onClick={() => handleSave(id)}
-                disabled={!editItem}
+                disabled={!editItem || /^\s*$/.test(editItem)}
               >
                 <CheckCircleIcon />
               </Button>

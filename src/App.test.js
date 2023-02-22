@@ -1,9 +1,11 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import App, { AppProps } from "./App";
+import App from "./App";
+import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("./components/TodoList", () => ({
-  TodoList: ({ deleteFn, handleChange }: AppProps) => {
+  TodoList: ({ deleteFn, handleChange }) => {
     return (
       <div>
         <div>TodoList</div>
