@@ -37,6 +37,16 @@ function App(): JSX.Element {
     localStorage.setItem("list", JSON.stringify(updatedList));
   };
 
+  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal = event.target.value;
+    inputVal.trim();
+    setInputText(inputVal);
+  };
+  const deleteAll = () => {
+    setList([]);
+    localStorage.removeItem("list");
+  };
+
   useEffect(() => {
     setList(JSON.parse(localStorage.getItem("list") || "[]"));
   }, []);
@@ -57,30 +67,50 @@ function App(): JSX.Element {
           inputProps={{ "data-testid": "input-text" }}
           color="secondary"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value.trim())}
+          onChange={inputHandler}
           focused
         />
         <Button
           data-testid="btn-add"
           variant="contained"
-          disabled={!inputText}
+          disabled={!inputText || /^\s*$/.test(inputText)}
           color="secondary"
           onClick={addToList}
           sx={{ m: 1 }}
         >
           Add
         </Button>
+        <Button
+          data-testid="btn-deleteAll"
+          variant="contained"
+          color="secondary"
+          onClick={deleteAll}
+          sx={{ m: 1 }}
+        >
+          Delete All
+        </Button>
       </Box>
       <List data-testid="list" className={classes.list}>
-        {list.map((item, index) => (
-          <TodoList
-            key={index}
-            item={item}
-            deleteFn={deleteFn}
-            id={index}
-            handleChange={handleChange}
-          />
-        ))}
+        {list.length > 0 ? (
+          list.map((item, index) => (
+            <TodoList
+              key={index}
+              item={item}
+              deleteFn={deleteFn}
+              id={index}
+              handleChange={handleChange}
+            />
+          ))
+        ) : (
+          <Typography
+            textAlign="center"
+            m={3}
+            data-testid="inital-msg"
+            marginTop="1"
+          >
+            Make a list
+          </Typography>
+        )}
       </List>
     </div>
   );

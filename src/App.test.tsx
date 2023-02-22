@@ -59,4 +59,10 @@ describe("render App component", () => {
     const del = screen.getByTestId("del");
     fireEvent.click(del);
   });
+  it("delete entire list", async () => {
+    render(<App />);
+
+    const deleteAll = screen.getByTestId("btn-deleteAll");
+    fireEvent.click(deleteAll);
+  });
 });
