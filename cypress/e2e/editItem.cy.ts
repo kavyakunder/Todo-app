@@ -19,11 +19,7 @@ describe("Todo-List", () => {
       .children('[data-testid="btn-edit"]')
       .click();
 
-    cy.get('[data-testid="input-edit"]')
-      .focused()
-      .clear()
-      .type("Hello3", { force: true });
-    // cy.get('[data-testid="input-edit"]').clear();
+    cy.get('[data-testid="input-edit"]').type("Hello3", { force: true });
 
     cy.get('[data-testid="btn-save"]').click();
     cy.visit("http://localhost:3000/");
