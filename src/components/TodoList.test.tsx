@@ -37,8 +37,8 @@ describe("Todo List", () => {
 
   it("implement strike functionality", () => {
     render(<TodoList {...mockProps} />);
-    const listItem = screen.getByTestId("list-item");
-    fireEvent.click(listItem);
+    const checkBox = screen.getByTestId("checkbox");
+    fireEvent.click(checkBox);
   });
 });
 

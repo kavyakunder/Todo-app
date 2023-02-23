@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Button, ListItem, TextField, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  ListItem,
+  TextField,
+  Grid,
+  Checkbox,
+  Box,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -19,7 +26,7 @@ export const TodoList = ({
   item,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<boolean>(false);
 
   const handleEdit = () => {
     setEditItem(item);
@@ -57,7 +64,7 @@ export const TodoList = ({
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid container item xs={4} justifyContent="flex-end">
+          <Grid item xs={4} justifyContent="flex-end">
             <Grid item xs={4}>
               <Button
                 data-testid="btn-save"
@@ -89,17 +96,23 @@ export const TodoList = ({
             alignItems="center"
           >
             <Grid item xs={8} paddingLeft={10}>
-              <ListItem
-                data-testid="list-item"
-                key={id}
-                onClick={() => setDone(!done)}
-                style={{
-                  textDecoration: done ? "line-through" : "none",
-                  cursor: "pointer",
-                }}
-              >
-                {item}
-              </ListItem>
+              <Box display="flex">
+                <Checkbox
+                  data-testid="checkbox"
+                  color="secondary"
+                  onClick={() => setDone(!done)}
+                />
+                <ListItem
+                  data-testid="list-item"
+                  key={id}
+                  style={{
+                    textDecoration: done ? "line-through" : "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {item}
+                </ListItem>
+              </Box>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end">
               <Grid item xs={4}>
