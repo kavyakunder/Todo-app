@@ -27,7 +27,6 @@ export const TodoList = ({
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
   const [done, setDone] = useState<boolean>(false);
-
   const handleEdit = () => {
     setEditItem(item);
   };
@@ -46,6 +45,16 @@ export const TodoList = ({
     inputValEdit.trim();
     setEditItem(inputValEdit);
   };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const doneValue = event.target.checked;
+    setDone(doneValue);
+    localStorage.setItem(`item${id}`, JSON.stringify(doneValue));
+  };
+
+  useEffect(() => {
+    setDone(JSON.parse(localStorage.getItem(`item${id}`) || "false"));
+  }, []);
 
   return (
     <>
@@ -100,7 +109,8 @@ export const TodoList = ({
                 <Checkbox
                   data-testid="checkbox"
                   color="secondary"
-                  onClick={() => setDone(!done)}
+                  onChange={handleCheckboxChange}
+                  checked={done}
                 />
                 <ListItem
                   data-testid="list-item"
