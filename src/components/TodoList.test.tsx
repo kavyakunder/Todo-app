@@ -34,6 +34,12 @@ describe("Todo List", () => {
     const btnCancel = screen.getByTestId("btn-cancel");
     fireEvent.click(btnCancel);
   });
+
+  it("implement strike functionality", () => {
+    render(<TodoList {...mockProps} />);
+    const listItem = screen.getByTestId("list-item");
+    fireEvent.click(listItem);
+  });
 });
 
 const mockHandleChange = jest.fn();

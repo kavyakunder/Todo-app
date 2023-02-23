@@ -61,8 +61,21 @@ describe("render App component", () => {
   });
   it("delete entire list", async () => {
     render(<App />);
+    const inputText = screen.getByTestId("input-text");
+    const btnAdd = screen.getByTestId("btn-add");
 
-    const deleteAll = screen.getByTestId("btn-deleteAll");
-    fireEvent.click(deleteAll);
+    expect(inputText).toBeInTheDocument();
+    expect(btnAdd).toBeInTheDocument();
+    expect(btnAdd).toBeDisabled();
+
+    fireEvent.change(inputText, { target: { value: "New" } });
+    expect(btnAdd).not.toBeDisabled();
+
+    fireEvent.click(btnAdd);
+
+    expect(screen.getByText("TodoList")).toBeInTheDocument();
+    const btnDeleteAll = screen.getByTestId("btn-deleteAll");
+
+    fireEvent.click(btnDeleteAll);
   });
 });

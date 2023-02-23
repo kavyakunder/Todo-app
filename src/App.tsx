@@ -80,15 +80,6 @@ function App(): JSX.Element {
         >
           Add
         </Button>
-        <Button
-          data-testid="btn-deleteAll"
-          variant="contained"
-          color="secondary"
-          onClick={deleteAll}
-          sx={{ m: 1 }}
-        >
-          Delete All
-        </Button>
       </Box>
       <List data-testid="list" className={classes.list}>
         {list.length > 0 ? (
@@ -112,6 +103,17 @@ function App(): JSX.Element {
           </Typography>
         )}
       </List>
+      {list.length > 0 && (
+        <Button
+          color="secondary"
+          data-testid="btn-deleteAll"
+          onClick={deleteAll}
+          style={{ display: "flex", margin: "0 auto" }}
+          variant="contained"
+        >
+          Delete All
+        </Button>
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ export const TodoList = ({
   item,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
 
   const handleEdit = () => {
     setEditItem(item);
@@ -39,7 +40,6 @@ export const TodoList = ({
     setEditItem(inputValEdit);
   };
 
-  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {};
   return (
     <>
       {editItem ? (
@@ -89,7 +89,14 @@ export const TodoList = ({
             alignItems="center"
           >
             <Grid item xs={8} paddingLeft={10}>
-              <ListItem data-testid="list-item" key={id}>
+              <ListItem
+                data-testid="list-item"
+                key={id}
+                onClick={() => setDone(!done)}
+                style={{
+                  textDecoration: done ? "line-through" : "none",
+                }}
+              >
                 {item}
               </ListItem>
             </Grid>
