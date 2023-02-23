@@ -95,6 +95,7 @@ export const TodoList = ({
                 onClick={() => setDone(!done)}
                 style={{
                   textDecoration: done ? "line-through" : "none",
+                  cursor: "pointer",
                 }}
               >
                 {item}
