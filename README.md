@@ -1,5 +1,3 @@
-
-
 https://user-images.githubusercontent.com/81958043/220904801-5c51cace-e537-4105-8d09-8be32305307a.mov
 
 # TodoList
