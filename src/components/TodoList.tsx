@@ -1,46 +1,42 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  ListItem,
-  TextField,
-  Grid,
-  Checkbox,
-  Box,
-} from "@mui/material";
+import { Button, ListItem, TextField, Grid, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 export type TodoListProps = {
-  deleteFn: (id: number) => void;
-  handleChange: (id: number, editItem: string | null) => void;
+  deleteItemFromList: (id: number) => void;
+  updateItemFromList: (id: number, editItem: string | null) => void;
   id: number;
   item: string;
 };
 
 export const TodoList = ({
-  deleteFn,
-  handleChange,
+  deleteItemFromList,
+  updateItemFromList,
   id,
   item,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
   const [done, setDone] = useState<boolean>(false);
-  const handleEdit = () => {
+
+  const handleEditItem = () => {
     setEditItem(item);
   };
 
-  const handleCancel = () => {
+  const handleEditCancel = () => {
     setEditItem(null);
   };
 
-  const handleSave = (id: number) => {
-    handleChange(id, editItem);
+  const handleEditSave = (id: number) => {
+    updateItemFromList(id, editItem);
     setEditItem(null);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEditInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const inputValEdit = event.target.value;
     inputValEdit.trim();
     setEditItem(inputValEdit);
@@ -48,104 +44,100 @@ export const TodoList = ({
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const doneValue = event.target.checked;
+    console.log("event", event.target);
+    console.log("doneVal", doneValue);
     setDone(doneValue);
-    localStorage.setItem(`item${id}`, JSON.stringify(doneValue));
+    localStorage.setItem(`${id}`, JSON.stringify(doneValue));
   };
 
   useEffect(() => {
-    setDone(JSON.parse(localStorage.getItem(`item${id}`) || "false"));
-  }, []);
+    setDone(JSON.parse(localStorage.getItem(`${id}`) || "false"));
+  }, [id]);
 
   return (
-    <>
+    <Grid
+      container
+      spacing={2}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
       {editItem ? (
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid item xs={4}>
+        <>
+          <Grid item xs={4} marginLeft={2}>
             <TextField
               inputProps={{ "data-testid": "input-edit" }}
+              onChange={handleEditInputChange}
               value={editItem}
-              onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={4} justifyContent="flex-end">
+          <Grid container item xs={4} justifyContent="flex-end">
             <Grid item xs={4}>
               <Button
-                data-testid="btn-save"
                 color="success"
-                onClick={() => handleSave(id)}
-                disabled={!editItem || /^\s*$/.test(editItem)}
+                data-testid="btn-save"
+                disabled={!editItem}
+                onClick={() => handleEditSave(id)}
               >
                 <CheckCircleIcon />
               </Button>
             </Grid>
             <Grid item xs={4}>
               <Button
-                data-testid="btn-cancel"
                 color="error"
-                onClick={handleCancel}
+                data-testid="btn-cancel"
+                onClick={handleEditCancel}
               >
                 <CancelIcon />
               </Button>
             </Grid>
           </Grid>
-        </Grid>
+        </>
       ) : (
         <>
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid item xs={8} paddingLeft={10}>
-              <Box display="flex">
-                <Checkbox
-                  data-testid="checkbox"
-                  color="secondary"
-                  onChange={handleCheckboxChange}
-                  checked={done}
-                />
-                <ListItem
-                  data-testid="list-item"
-                  key={id}
-                  style={{
-                    textDecoration: done ? "line-through" : "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {item}
-                </ListItem>
-              </Box>
+          <Grid item xs={8} paddingLeft={10}>
+            <Grid display="flex">
+              <Checkbox
+                checked={done}
+                color="secondary"
+                data-testid="checkbox"
+                onChange={handleCheckboxChange}
+              />
+              <ListItem
+                data-testid="list-item"
+                key={id}
+                style={{
+                  textDecoration: done ? "line-through" : "none",
+                }}
+              >
+                {item}
+              </ListItem>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end">
-              <Grid item xs={4}>
-                <Button
-                  data-testid="btn-edit"
-                  color="info"
-                  onClick={handleEdit}
-                >
-                  <EditIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button data-testid="btn-delete" onClick={() => deleteFn(id)}>
-                  <DeleteForeverIcon
-                    style={{ color: "#2A3038" }}
-                    className="btn-black"
-                  />
-                </Button>
-              </Grid>
+          </Grid>
+          <Grid container item xs={4} justifyContent="flex-end">
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-edit"
+                color="info"
+                onClick={handleEditItem}
+              >
+                <EditIcon />
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-delete"
+                onClick={() => deleteItemFromList(id)}
+              >
+                <DeleteForeverIcon
+                  className="btn-black"
+                  style={{ color: "#2A3038" }}
+                />
+              </Button>
             </Grid>
           </Grid>
         </>
       )}
-    </>
+    </Grid>
   );
 };
