@@ -7,33 +7,31 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTodoListStyles } from "./TodoList.style";
 
 export type TodoListProps = {
+  checked: boolean;
+  id: number;
+  name: string;
   deleteItemFromList: (id: number) => void;
+  handleCheckboxChange: (id: number, checked: boolean) => void;
   updateItemFromList: (
     id: number,
     editItem: string | null,
     checked: boolean
   ) => void;
-  id: number;
-  item: string;
-  checked: boolean;
-  updateLocalStorage: (
-    updateCheckBoxStatus: Array<{ id: number; name: string; checked: boolean }>
-  ) => void;
 };
 
 export const TodoList = ({
-  deleteItemFromList,
-  updateItemFromList,
   id,
-  item,
+  name,
   checked,
-  updateLocalStorage,
+  deleteItemFromList,
+  handleCheckboxChange,
+  updateItemFromList,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
   const classes = useTodoListStyles();
 
   const handleEditItem = () => {
-    setEditItem(item);
+    setEditItem(name);
   };
 
   const handleCancel = () => {
@@ -50,19 +48,6 @@ export const TodoList = ({
   ) => {
     const inputValue = event.target.value;
     setEditItem(inputValue);
-  };
-
-  const handleCheckboxChange = () => {
-    const updateCheckBoxStatus = JSON.parse(
-      localStorage.getItem("todoList") || "[]"
-    ).map((item: { id: number; checked: boolean }) => {
-      if (item.id === id) {
-        return { ...item, checked: !checked };
-      } else {
-        return item;
-      }
-    });
-    updateLocalStorage(updateCheckBoxStatus);
   };
 
   return (
@@ -112,7 +97,7 @@ export const TodoList = ({
                 checked={checked}
                 color="secondary"
                 data-testid="checkbox"
-                onChange={handleCheckboxChange}
+                onChange={() => handleCheckboxChange(id, checked)}
               />
               <ListItem
                 data-testid="list-item"
@@ -121,7 +106,7 @@ export const TodoList = ({
                   checked ? classes.listChecked : classes.listUnchecked
                 }
               >
-                {item}
+                {name}
               </ListItem>
             </Grid>
           </Grid>

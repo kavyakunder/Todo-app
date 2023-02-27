@@ -32,25 +32,28 @@ function App(): JSX.Element {
   const deleteItemFromList = (id: number): void => {
     const updatedList = todoList.filter((item) => item.id !== id);
     setTodoList(updatedList);
-    saveToLocalStorage("todoList", JSON.stringify(updatedList));
+    saveToLocalStorage("todoList", updatedList);
   };
 
   const updateItemFromList = (id: number, editItem: string | null): void => {
-    const updatedList = todoList.map((item) => {
-      if (item.id === id) {
-        return { ...item, name: editItem?.trim() ?? "" };
-      } else {
-        return item;
-      }
-    });
-
+    const updatedList = [...todoList];
+    const getIndex = todoList.findIndex((item) => item.id === id);
+    updatedList[getIndex].name = editItem?.trim() ?? "";
     setTodoList(updatedList);
-    saveToLocalStorage("todoList", JSON.stringify(updatedList));
+    saveToLocalStorage("todoList", updatedList);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal = event.target.value;
-    setInputText(inputVal);
+    const inputValue = event.target.value;
+    setInputText(inputValue);
+  };
+
+  const handleCheckboxChange = (id: number, checked: boolean) => {
+    const updatedList = [...todoList];
+    const getIndex = todoList.findIndex((item) => item.id === id);
+    updatedList[getIndex].checked = !checked;
+    setTodoList(updatedList);
+    saveToLocalStorage("todoList", updatedList);
   };
 
   const clearTodoList = () => {
@@ -58,20 +61,16 @@ function App(): JSX.Element {
     localStorage.removeItem("todoList");
   };
 
+  const saveToLocalStorage = (
+    key: string,
+    value: Array<{ id: number; name: string; checked: boolean }>
+  ) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
   useEffect(() => {
     setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
   }, []);
-
-  const saveToLocalStorage = (key: string, value: string) => {
-    localStorage.setItem(key, value);
-  };
-
-  const updateLocalStorage = (
-    updateCheckBoxStatus: Array<{ id: number; name: string; checked: boolean }>
-  ): void => {
-    setTodoList(updateCheckBoxStatus);
-    saveToLocalStorage("todoList", JSON.stringify(updateCheckBoxStatus));
-  };
 
   return (
     <div className="App">
@@ -107,13 +106,11 @@ function App(): JSX.Element {
         {todoList.length > 0 ? (
           todoList.map((item) => (
             <TodoList
+              {...item}
+              key={item.id}
               deleteItemFromList={deleteItemFromList}
               updateItemFromList={updateItemFromList}
-              id={item.id}
-              item={item.name}
-              key={item.id}
-              checked={item.checked}
-              updateLocalStorage={updateLocalStorage}
+              handleCheckboxChange={handleCheckboxChange}
             />
           ))
         ) : (
