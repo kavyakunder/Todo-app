@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, ListItem, TextField, Grid, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTodoListStyles } from "./TodoList.style";
 
 export type TodoListProps = {
   deleteItemFromList: (id: number) => void;
-  updateItemFromList: (id: number, editItem: string | null) => void;
+  updateItemFromList: (
+    id: number,
+    editItem: string | null,
+    checked: boolean
+  ) => void;
   id: number;
   item: string;
+  checked: boolean;
+  updateLocalStorage: (
+    updateCheckBoxStatus: Array<{ id: number; name: string; checked: boolean }>
+  ) => void;
 };
 
 export const TodoList = ({
@@ -17,42 +26,44 @@ export const TodoList = ({
   updateItemFromList,
   id,
   item,
+  checked,
+  updateLocalStorage,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
-  const [done, setDone] = useState<boolean>(false);
+  const classes = useTodoListStyles();
 
   const handleEditItem = () => {
     setEditItem(item);
   };
 
-  const handleEditCancel = () => {
+  const handleCancel = () => {
     setEditItem(null);
   };
 
-  const handleEditSave = (id: number) => {
-    updateItemFromList(id, editItem);
+  const handleSave = () => {
+    updateItemFromList(id, editItem, checked);
     setEditItem(null);
   };
 
   const handleEditInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const inputValEdit = event.target.value;
-    inputValEdit.trim();
-    setEditItem(inputValEdit);
+    const inputValue = event.target.value;
+    setEditItem(inputValue);
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const doneValue = event.target.checked;
-    console.log("event", event.target);
-    console.log("doneVal", doneValue);
-    setDone(doneValue);
-    localStorage.setItem(`${id}`, JSON.stringify(doneValue));
+  const handleCheckboxChange = () => {
+    const updateCheckBoxStatus = JSON.parse(
+      localStorage.getItem("todoList") || "[]"
+    ).map((item: { id: number; checked: boolean }) => {
+      if (item.id === id) {
+        return { ...item, checked: !checked };
+      } else {
+        return item;
+      }
+    });
+    updateLocalStorage(updateCheckBoxStatus);
   };
-
-  useEffect(() => {
-    setDone(JSON.parse(localStorage.getItem(`${id}`) || "false"));
-  }, [id]);
 
   return (
     <Grid
@@ -76,8 +87,8 @@ export const TodoList = ({
               <Button
                 color="success"
                 data-testid="btn-save"
-                disabled={!editItem}
-                onClick={() => handleEditSave(id)}
+                disabled={!editItem.trim()}
+                onClick={handleSave}
               >
                 <CheckCircleIcon />
               </Button>
@@ -86,7 +97,7 @@ export const TodoList = ({
               <Button
                 color="error"
                 data-testid="btn-cancel"
-                onClick={handleEditCancel}
+                onClick={handleCancel}
               >
                 <CancelIcon />
               </Button>
@@ -98,7 +109,7 @@ export const TodoList = ({
           <Grid item xs={8} paddingLeft={10}>
             <Grid display="flex">
               <Checkbox
-                checked={done}
+                checked={checked}
                 color="secondary"
                 data-testid="checkbox"
                 onChange={handleCheckboxChange}
@@ -106,9 +117,9 @@ export const TodoList = ({
               <ListItem
                 data-testid="list-item"
                 key={id}
-                style={{
-                  textDecoration: done ? "line-through" : "none",
-                }}
+                className={
+                  checked ? classes.listChecked : classes.listUnchecked
+                }
               >
                 {item}
               </ListItem>
@@ -129,10 +140,7 @@ export const TodoList = ({
                 data-testid="btn-delete"
                 onClick={() => deleteItemFromList(id)}
               >
-                <DeleteForeverIcon
-                  className="btn-black"
-                  style={{ color: "#2A3038" }}
-                />
+                <DeleteForeverIcon className={classes.deleteIcon} />
               </Button>
             </Grid>
           </Grid>

@@ -13,16 +13,16 @@ export type AppProps = {
 
 function App(): JSX.Element {
   const [inputText, setInputText] = useState<string>("");
-  const [todoList, setTodoList] = useState<Array<{ id: number; name: string }>>(
-    []
-  );
+  const [todoList, setTodoList] = useState<
+    Array<{ id: number; name: string; checked: boolean }>
+  >([]);
 
   const classes = useAppStyles();
 
   const addItemToList = (): void => {
     const newList = [
       ...todoList,
-      { id: new Date().getTime(), name: inputText },
+      { id: new Date().getTime(), name: inputText.trim(), checked: false },
     ];
     setTodoList(newList);
     localStorage.setItem("todoList", JSON.stringify(newList));
@@ -30,23 +30,26 @@ function App(): JSX.Element {
   };
 
   const deleteItemFromList = (id: number): void => {
-    const updatedList = [...todoList];
-    const index = todoList.findIndex((item) => item.id === id);
-    updatedList.splice(index, 1);
+    const updatedList = todoList.filter((item) => item.id !== id);
     setTodoList(updatedList);
-    localStorage.setItem("todoList", JSON.stringify(updatedList));
+    saveToLocalStorage("todoList", JSON.stringify(updatedList));
   };
 
   const updateItemFromList = (id: number, editItem: string | null): void => {
-    const updatedList = [...todoList];
-    const index = todoList.findIndex((item) => item.id === id);
-    updatedList.splice(index, 1, { id, name: editItem?.trim() ?? "" });
+    const updatedList = todoList.map((item) => {
+      if (item.id === id) {
+        return { ...item, name: editItem?.trim() ?? "" };
+      } else {
+        return item;
+      }
+    });
+
     setTodoList(updatedList);
-    localStorage.setItem("todoList", JSON.stringify(updatedList));
+    saveToLocalStorage("todoList", JSON.stringify(updatedList));
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputVal = event.target.value.trim();
+    const inputVal = event.target.value;
     setInputText(inputVal);
   };
 
@@ -58,6 +61,17 @@ function App(): JSX.Element {
   useEffect(() => {
     setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
   }, []);
+
+  const saveToLocalStorage = (key: string, value: string) => {
+    localStorage.setItem(key, value);
+  };
+
+  const updateLocalStorage = (
+    updateCheckBoxStatus: Array<{ id: number; name: string; checked: boolean }>
+  ): void => {
+    setTodoList(updateCheckBoxStatus);
+    saveToLocalStorage("todoList", JSON.stringify(updateCheckBoxStatus));
+  };
 
   return (
     <div className="App">
@@ -81,7 +95,7 @@ function App(): JSX.Element {
         <Button
           color="secondary"
           data-testid="btn-add"
-          disabled={!inputText || /^\s*$/.test(inputText)}
+          disabled={!inputText.trim()}
           onClick={addItemToList}
           sx={{ m: 1 }}
           variant="contained"
@@ -93,11 +107,13 @@ function App(): JSX.Element {
         {todoList.length > 0 ? (
           todoList.map((item) => (
             <TodoList
-              deleteItemFromList={() => deleteItemFromList(item.id)}
+              deleteItemFromList={deleteItemFromList}
               updateItemFromList={updateItemFromList}
               id={item.id}
               item={item.name}
               key={item.id}
+              checked={item.checked}
+              updateLocalStorage={updateLocalStorage}
             />
           ))
         ) : (
