@@ -5,30 +5,28 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTodoListStyles } from "./TodoList.style";
+import { TodoListItemType } from "../App";
 
 export type TodoListProps = {
-  checked: boolean;
-  id: number;
-  name: string;
+  item: TodoListItemType;
   deleteItemFromList: (id: number) => void;
-  handleCheckboxChange: (id: number, checked: boolean) => void;
   updateItemFromList: (
     id: number,
     editItem: string | null,
-    checked: boolean
+    checked: boolean,
+    action: string
   ) => void;
 };
 
 export const TodoList = ({
-  id,
-  name,
-  checked,
+  item,
   deleteItemFromList,
-  handleCheckboxChange,
   updateItemFromList,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
   const classes = useTodoListStyles();
+
+  const { name, id, checked } = item;
 
   const handleEditItem = () => {
     setEditItem(name);
@@ -38,8 +36,8 @@ export const TodoList = ({
     setEditItem(null);
   };
 
-  const handleSave = () => {
-    updateItemFromList(id, editItem, checked);
+  const handleSave = (action: string) => {
+    updateItemFromList(id, editItem, checked, action);
     setEditItem(null);
   };
 
@@ -73,7 +71,7 @@ export const TodoList = ({
                 color="success"
                 data-testid="btn-save"
                 disabled={!editItem.trim()}
-                onClick={handleSave}
+                onClick={() => handleSave("edit")}
               >
                 <CheckCircleIcon />
               </Button>
@@ -96,8 +94,11 @@ export const TodoList = ({
               <Checkbox
                 checked={checked}
                 color="secondary"
+                name="cb"
                 data-testid="checkbox"
-                onChange={() => handleCheckboxChange(id, checked)}
+                onChange={() =>
+                  updateItemFromList(id, name, checked, "checkbox")
+                }
               />
               <ListItem
                 data-testid="list-item"
@@ -115,6 +116,7 @@ export const TodoList = ({
               <Button
                 data-testid="btn-edit"
                 color="info"
+                name="btnq"
                 onClick={handleEditItem}
               >
                 <EditIcon />

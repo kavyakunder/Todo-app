@@ -11,11 +11,15 @@ export type AppProps = {
   updateItemFromList: () => void;
 };
 
+export type TodoListItemType = {
+  id: number;
+  name: string;
+  checked: boolean;
+};
+
 function App(): JSX.Element {
   const [inputText, setInputText] = useState<string>("");
-  const [todoList, setTodoList] = useState<
-    Array<{ id: number; name: string; checked: boolean }>
-  >([]);
+  const [todoList, setTodoList] = useState<Array<TodoListItemType>>([]);
 
   const classes = useAppStyles();
 
@@ -25,7 +29,7 @@ function App(): JSX.Element {
       { id: new Date().getTime(), name: inputText.trim(), checked: false },
     ];
     setTodoList(newList);
-    localStorage.setItem("todoList", JSON.stringify(newList));
+    saveToLocalStorage("todoList", newList);
     setInputText("");
   };
 
@@ -35,10 +39,21 @@ function App(): JSX.Element {
     saveToLocalStorage("todoList", updatedList);
   };
 
-  const updateItemFromList = (id: number, editItem: string | null): void => {
+  const updateItemFromList = (
+    id: number,
+    editItem: string | null,
+    checked: boolean,
+    action: string
+  ): void => {
+    console.log("action", action);
     const updatedList = [...todoList];
-    const getIndex = todoList.findIndex((item) => item.id === id);
-    updatedList[getIndex].name = editItem?.trim() ?? "";
+    const listIndex = todoList.findIndex((item) => item.id === id);
+
+    if (action === "edit") {
+      updatedList[listIndex].name = editItem?.trim() ?? "";
+    } else if (action === "checkbox") {
+      updatedList[listIndex].checked = !checked;
+    }
     setTodoList(updatedList);
     saveToLocalStorage("todoList", updatedList);
   };
@@ -48,23 +63,12 @@ function App(): JSX.Element {
     setInputText(inputValue);
   };
 
-  const handleCheckboxChange = (id: number, checked: boolean) => {
-    const updatedList = [...todoList];
-    const getIndex = todoList.findIndex((item) => item.id === id);
-    updatedList[getIndex].checked = !checked;
-    setTodoList(updatedList);
-    saveToLocalStorage("todoList", updatedList);
-  };
-
   const clearTodoList = () => {
     setTodoList([]);
     localStorage.removeItem("todoList");
   };
 
-  const saveToLocalStorage = (
-    key: string,
-    value: Array<{ id: number; name: string; checked: boolean }>
-  ) => {
+  const saveToLocalStorage = (key: string, value: Array<TodoListItemType>) => {
     localStorage.setItem(key, JSON.stringify(value));
   };
 
@@ -73,14 +77,8 @@ function App(): JSX.Element {
   }, []);
 
   return (
-    <div className="App">
-      <Typography
-        data-testid="heading"
-        m={3}
-        marginTop="1"
-        textAlign="center"
-        variant="h3"
-      >
+    <>
+      <Typography data-testid="heading" m={3} textAlign="center" variant="h3">
         Todo-List
       </Typography>
       <Grid display="flex" justifyContent="center" alignItems="center">
@@ -103,28 +101,22 @@ function App(): JSX.Element {
         </Button>
       </Grid>
       <List data-testid="todoList" className={classes.list}>
-        {todoList.length > 0 ? (
+        {Boolean(todoList.length) ? (
           todoList.map((item) => (
             <TodoList
-              {...item}
+              item={item}
               key={item.id}
               deleteItemFromList={deleteItemFromList}
               updateItemFromList={updateItemFromList}
-              handleCheckboxChange={handleCheckboxChange}
             />
           ))
         ) : (
-          <Typography
-            data-testid="initial-msg"
-            m={3}
-            marginTop="1"
-            textAlign="center"
-          >
+          <Typography data-testid="initial-msg" m={3} textAlign="center">
             Make a todoList
           </Typography>
         )}
       </List>
-      {todoList.length > 0 && (
+      {Boolean(todoList.length) && (
         <Button
           color="secondary"
           data-testid="btn-deleteAll"
@@ -135,7 +127,7 @@ function App(): JSX.Element {
           Delete All
         </Button>
       )}
-    </div>
+    </>
   );
 }
 
