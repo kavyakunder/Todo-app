@@ -2,7 +2,7 @@ import { makeStyles } from "@mui/styles";
 
 export const useTodoListStyles = makeStyles((theme) => ({
   listChecked: {
-    textDecoration: "line-through !important",
+    textDecoration: "line-through ",
   },
   listUnchecked: {
     textDecoration: "none",

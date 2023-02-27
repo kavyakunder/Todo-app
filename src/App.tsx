@@ -39,21 +39,10 @@ function App(): JSX.Element {
     saveToLocalStorage("todoList", updatedList);
   };
 
-  const updateItemFromList = (
-    id: number,
-    editItem: string | null,
-    checked: boolean,
-    action: string
-  ): void => {
-    console.log("action", action);
+  const updateItemFromList = (item: TodoListItemType): void => {
     const updatedList = [...todoList];
-    const listIndex = todoList.findIndex((item) => item.id === id);
-
-    if (action === "edit") {
-      updatedList[listIndex].name = editItem?.trim() ?? "";
-    } else if (action === "checkbox") {
-      updatedList[listIndex].checked = !checked;
-    }
+    const listIndex = todoList.findIndex((i) => i.id === item.id);
+    updatedList[listIndex] = item;
     setTodoList(updatedList);
     saveToLocalStorage("todoList", updatedList);
   };
@@ -65,7 +54,7 @@ function App(): JSX.Element {
 
   const clearTodoList = () => {
     setTodoList([]);
-    localStorage.removeItem("todoList");
+    saveToLocalStorage("todoList", []);
   };
 
   const saveToLocalStorage = (key: string, value: Array<TodoListItemType>) => {
@@ -100,22 +89,24 @@ function App(): JSX.Element {
           Add
         </Button>
       </Grid>
-      <List data-testid="todoList" className={classes.list}>
-        {Boolean(todoList.length) ? (
-          todoList.map((item) => (
-            <TodoList
-              item={item}
-              key={item.id}
-              deleteItemFromList={deleteItemFromList}
-              updateItemFromList={updateItemFromList}
-            />
-          ))
-        ) : (
-          <Typography data-testid="initial-msg" m={3} textAlign="center">
-            Make a todoList
-          </Typography>
-        )}
-      </List>
+      <div className={classes.listContainer}>
+        <List data-testid="todoList" className={classes.list}>
+          {Boolean(todoList.length) ? (
+            todoList.map((item) => (
+              <TodoList
+                item={item}
+                key={item.id}
+                deleteItemFromList={deleteItemFromList}
+                updateItemFromList={updateItemFromList}
+              />
+            ))
+          ) : (
+            <Typography data-testid="initial-msg" m={3} textAlign="center">
+              Make a todoList
+            </Typography>
+          )}
+        </List>
+      </div>
       {Boolean(todoList.length) && (
         <Button
           color="secondary"

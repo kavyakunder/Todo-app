@@ -10,12 +10,7 @@ import { TodoListItemType } from "../App";
 export type TodoListProps = {
   item: TodoListItemType;
   deleteItemFromList: (id: number) => void;
-  updateItemFromList: (
-    id: number,
-    editItem: string | null,
-    checked: boolean,
-    action: string
-  ) => void;
+  updateItemFromList: (item: TodoListItemType) => void;
 };
 
 export const TodoList = ({
@@ -36,8 +31,8 @@ export const TodoList = ({
     setEditItem(null);
   };
 
-  const handleSave = (action: string) => {
-    updateItemFromList(id, editItem, checked, action);
+  const handleSave = () => {
+    updateItemFromList({ ...item, name: editItem || "" });
     setEditItem(null);
   };
 
@@ -46,6 +41,13 @@ export const TodoList = ({
   ) => {
     const inputValue = event.target.value;
     setEditItem(inputValue);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    updateItemFromList({
+      ...item,
+      checked: event.target.checked,
+    });
   };
 
   return (
@@ -71,7 +73,7 @@ export const TodoList = ({
                 color="success"
                 data-testid="btn-save"
                 disabled={!editItem.trim()}
-                onClick={() => handleSave("edit")}
+                onClick={handleSave}
               >
                 <CheckCircleIcon />
               </Button>
@@ -90,23 +92,19 @@ export const TodoList = ({
       ) : (
         <>
           <Grid item xs={8} paddingLeft={10}>
-            <Grid display="flex">
+            <Grid
+              display="flex"
+              className={checked ? classes.listChecked : classes.listUnchecked}
+            >
               <Checkbox
                 checked={checked}
                 color="secondary"
                 name="cb"
                 data-testid="checkbox"
-                onChange={() =>
-                  updateItemFromList(id, name, checked, "checkbox")
-                }
+                onChange={handleCheckboxChange}
               />
-              <ListItem
-                data-testid="list-item"
-                key={id}
-                className={
-                  checked ? classes.listChecked : classes.listUnchecked
-                }
-              >
+
+              <ListItem data-testid="list-item" key={id}>
                 {name}
               </ListItem>
             </Grid>
