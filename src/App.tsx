@@ -6,11 +6,6 @@ import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
 import { TodoList } from "./components/TodoList";
 
-// export type AppProps = {
-//   deleteItemFromList: () => void;
-//   updateItemFromList: () => void;
-// };
-
 export type TodoListItemType = {
   id: number;
   name: string;
@@ -51,7 +46,6 @@ function App(): JSX.Element {
     const inputValue = event.target.value;
     setInputText(inputValue);
   };
-  console.log("hello");
   const clearTodoList = () => {
     setTodoList([]);
     saveToLocalStorage("todoList", []);
