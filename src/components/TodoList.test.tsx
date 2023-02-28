@@ -15,14 +15,15 @@ describe("Todo List", () => {
 
     fireEvent.change(inputEdit, { target: { value: "abc2" } });
     fireEvent.click(btnSave);
+
     expect(mockUpdateItemFromList).toHaveBeenCalled();
   });
 
   it("implement delete functionality", () => {
     render(<TodoList {...mockProps} />);
     const btnDelete = screen.getByTestId("btn-delete");
-
     fireEvent.click(btnDelete);
+
     expect(mockDeleteItemFromList).toHaveBeenCalled();
   });
 
@@ -35,22 +36,26 @@ describe("Todo List", () => {
     fireEvent.click(btnCancel);
   });
 
-  it("implement strike functionality", () => {
+  it("implements strike functionality", () => {
     render(<TodoList {...mockProps} />);
-    const checkBox = screen.getByTestId("checkbox");
-    const listItem = screen.getByTestId("list-item");
-    fireEvent.change(checkBox);
-    // expect(mockHandleCheckboxChange).toHaveBeenCalled();
-    expect(listItem).toHaveStyle("text-decoration: none");
+
+    const checkBox = screen.getByRole("checkbox");
+    fireEvent.click(checkBox);
+
+    expect(mockUpdateItemFromList).toHaveBeenCalled();
   });
 });
 
 const mockUpdateItemFromList = jest.fn();
 const mockDeleteItemFromList = jest.fn();
+const mockItem = {
+  id: 1,
+  name: "Hello2",
+  checked: false,
+};
 
 const mockProps: TodoListProps = {
   deleteItemFromList: mockDeleteItemFromList,
   updateItemFromList: mockUpdateItemFromList,
-  id: 1,
-  item: "abc",
+  item: mockItem,
 };

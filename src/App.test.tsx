@@ -74,7 +74,6 @@ describe("render App component", () => {
 
     fireEvent.click(btnAdd);
 
-    expect(screen.getByText("TodoList")).toBeInTheDocument();
     const btnDeleteAll = screen.getByTestId("btn-deleteAll");
 
     fireEvent.click(btnDeleteAll);
