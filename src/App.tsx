@@ -41,7 +41,7 @@ function App(): JSX.Element {
 
   const updateItemFromList = (item: TodoListItemType): void => {
     const updatedList = [...todoList];
-    const listIndex = todoList.findIndex((i) => i.id === item.id);
+    const listIndex = todoList.findIndex((listItem) => listItem.id === item.id);
     updatedList[listIndex] = item;
     setTodoList(updatedList);
     saveToLocalStorage("todoList", updatedList);
@@ -108,15 +108,16 @@ function App(): JSX.Element {
         </List>
       </div>
       {Boolean(todoList.length) && (
-        <Button
-          color="secondary"
-          data-testid="btn-deleteAll"
-          onClick={clearTodoList}
-          style={{ display: "flex", margin: "0 auto" }}
-          variant="contained"
-        >
-          Delete All
-        </Button>
+        <Grid display="flex" justifyContent="center">
+          <Button
+            color="secondary"
+            data-testid="btn-deleteAll"
+            onClick={clearTodoList}
+            variant="contained"
+          >
+            Delete All
+          </Button>
+        </Grid>
       )}
     </>
   );

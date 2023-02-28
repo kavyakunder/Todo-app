@@ -32,7 +32,7 @@ export const TodoList = ({
   };
 
   const handleSave = () => {
-    updateItemFromList({ ...item, name: editItem || "" });
+    updateItemFromList({ ...item, name: editItem?.trim() || "" });
     setEditItem(null);
   };
 
@@ -52,11 +52,11 @@ export const TodoList = ({
 
   return (
     <Grid
+      alignItems="center"
       container
-      spacing={2}
       direction="row"
       justifyContent="space-between"
-      alignItems="center"
+      spacing={2}
     >
       {editItem ? (
         <>
@@ -99,11 +99,9 @@ export const TodoList = ({
               <Checkbox
                 checked={checked}
                 color="secondary"
-                name="cb"
                 data-testid="checkbox"
                 onChange={handleCheckboxChange}
               />
-
               <ListItem data-testid="list-item" key={id}>
                 {name}
               </ListItem>
@@ -114,7 +112,6 @@ export const TodoList = ({
               <Button
                 data-testid="btn-edit"
                 color="info"
-                name="btnq"
                 onClick={handleEditItem}
               >
                 <EditIcon />
