@@ -4,53 +4,73 @@ import { TodoList } from "./TodoList";
 import { TodoListProps } from "./TodoList";
 
 describe("Todo List", () => {
-  it("implement save functionality", () => {
+  it("Should edit and save the item", () => {
     render(<TodoList {...mockProps} />);
-    const btnEdit = screen.getByTestId("btn-edit");
 
+    const btnEdit = screen.getByTestId("btn-edit");
     fireEvent.click(btnEdit);
 
     const inputEdit = screen.getByTestId("input-edit");
     const btnSave = screen.getByTestId("btn-save");
 
-    fireEvent.change(inputEdit, { target: { value: "abc2" } });
+    fireEvent.change(inputEdit, { target: { value: "hello world" } });
     fireEvent.click(btnSave);
-    expect(mockUpdateItemFromList).toHaveBeenCalled();
+
+    expect(mockUpdateItemFromList).toHaveBeenCalledWith({
+      checked: false,
+      id: 1,
+      name: "hello world",
+    });
   });
 
-  it("implement delete functionality", () => {
-    render(<TodoList {...mockProps} />);
+  it("Should delete the item", () => {
+    render(<TodoList {...mockProps} item={{ ...mockItem, checked: true }} />);
+
     const btnDelete = screen.getByTestId("btn-delete");
-
     fireEvent.click(btnDelete);
-    expect(mockDeleteItemFromList).toHaveBeenCalled();
+
+    expect(mockDeleteItemFromList).toHaveBeenCalledWith(1);
   });
 
-  it("implement edit functionality", () => {
+  it("Should not save the edit", () => {
     render(<TodoList {...mockProps} />);
+
     const btnEdit = screen.getByTestId("btn-edit");
     fireEvent.click(btnEdit);
 
+    const inputEdit = screen.getByTestId("input-edit");
+    expect(inputEdit).toBeInTheDocument();
+
     const btnCancel = screen.getByTestId("btn-cancel");
     fireEvent.click(btnCancel);
+
+    expect(inputEdit).not.toBeInTheDocument();
   });
 
-  it("implement strike functionality", () => {
+  it("Should strike out the item", () => {
     render(<TodoList {...mockProps} />);
+
     const checkBox = screen.getByTestId("checkbox");
-    const listItem = screen.getByTestId("list-item");
-    fireEvent.change(checkBox);
-    // expect(mockHandleCheckboxChange).toHaveBeenCalled();
-    expect(listItem).toHaveStyle("text-decoration: none");
+    fireEvent.click(checkBox.childNodes[0]);
+
+    expect(mockUpdateItemFromList).toHaveBeenCalledWith({
+      checked: true,
+      id: 1,
+      name: "lorem ipsum",
+    });
   });
 });
 
 const mockUpdateItemFromList = jest.fn();
 const mockDeleteItemFromList = jest.fn();
+const mockItem = {
+  id: 1,
+  name: "lorem ipsum",
+  checked: false,
+};
 
 const mockProps: TodoListProps = {
   deleteItemFromList: mockDeleteItemFromList,
   updateItemFromList: mockUpdateItemFromList,
-  id: 1,
-  item: "abc",
+  item: mockItem,
 };

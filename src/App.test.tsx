@@ -1,16 +1,27 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import App, { AppProps } from "./App";
+import App from "./App";
+import { TodoListProps } from "./components/TodoList";
 
 jest.mock("./components/TodoList", () => ({
-  TodoList: ({ deleteItemFromList, updateItemFromList }: AppProps) => {
+  TodoList: ({
+    deleteItemFromList,
+    updateItemFromList,
+    item,
+  }: TodoListProps) => {
     return (
       <div>
-        <div>TodoList</div>
-        <button data-testid="editItem" onClick={updateItemFromList}>
+        <div>{item.name}</div>
+        <button
+          data-testid="editItem"
+          onClick={() => updateItemFromList({ ...item, name: "lorem ipsum" })}
+        >
           EditTodoList
         </button>
-        <button data-testid="deleteItem" onClick={deleteItemFromList}>
+        <button
+          data-testid="deleteItem"
+          onClick={() => deleteItemFromList(item.id)}
+        >
           DeleteTodoList
         </button>
       </div>
@@ -19,8 +30,9 @@ jest.mock("./components/TodoList", () => ({
 }));
 
 describe("render App component", () => {
-  it("renders input and button", () => {
+  it("Should render input and button", () => {
     render(<App />);
+
     const headingElement = screen.getByTestId("heading");
     const inputText = screen.getByTestId("input-text");
     const btnAdd = screen.getByTestId("btn-add");
@@ -31,8 +43,9 @@ describe("render App component", () => {
     expect(btnAdd).toBeDisabled();
   });
 
-  it("implements add functionality", async () => {
+  it("Should add an item to the list", async () => {
     render(<App />);
+
     const inputText = screen.getByTestId("input-text");
     const btnAdd = screen.getByTestId("btn-add");
 
@@ -45,23 +58,30 @@ describe("render App component", () => {
 
     fireEvent.click(btnAdd);
 
-    expect(screen.getByText("TodoList")).toBeInTheDocument();
+    expect(screen.getByText("New")).toBeInTheDocument();
   });
 
-  it("edit item from the list", async () => {
+  it("Should edit an item from the list", async () => {
     render(<App />);
+
     const editItem = screen.getByTestId("editItem");
     fireEvent.click(editItem);
+
+    expect(screen.getByText("lorem ipsum")).toBeInTheDocument();
   });
 
-  it("delete item from the list", async () => {
+  it("Should delete an item from the list", async () => {
     render(<App />);
+
     const deleteItem = screen.getByTestId("deleteItem");
     fireEvent.click(deleteItem);
+
+    expect(screen.queryByText("lorem ipsum")).not.toBeInTheDocument();
   });
 
-  it("delete entire list", async () => {
+  it("Should delete entire list", async () => {
     render(<App />);
+
     const inputText = screen.getByTestId("input-text");
     const btnAdd = screen.getByTestId("btn-add");
 
@@ -74,10 +94,9 @@ describe("render App component", () => {
 
     fireEvent.click(btnAdd);
 
-    expect(screen.getByText("TodoList")).toBeInTheDocument();
     const btnDeleteAll = screen.getByTestId("btn-deleteAll");
-
     fireEvent.click(btnDeleteAll);
+
     expect(screen.getByTestId("initial-msg")).toBeInTheDocument();
   });
 });
