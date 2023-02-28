@@ -4,7 +4,7 @@ import { TodoList } from "./TodoList";
 import { TodoListProps } from "./TodoList";
 
 describe("Todo List", () => {
-  it("implement save functionality", () => {
+  it("Should edit and save the item", () => {
     render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
 
@@ -16,18 +16,22 @@ describe("Todo List", () => {
     fireEvent.change(inputEdit, { target: { value: "abc2" } });
     fireEvent.click(btnSave);
 
-    expect(mockUpdateItemFromList).toHaveBeenCalled();
+    expect(mockUpdateItemFromList).toHaveBeenCalledWith({
+      checked: false,
+      id: 1,
+      name: "abc2",
+    });
   });
 
-  it("implement delete functionality", () => {
+  it("Should delete the item", () => {
     render(<TodoList {...mockProps} />);
     const btnDelete = screen.getByTestId("btn-delete");
     fireEvent.click(btnDelete);
 
-    expect(mockDeleteItemFromList).toHaveBeenCalled();
+    expect(mockDeleteItemFromList).toHaveBeenCalledWith(1);
   });
 
-  it("implement edit functionality", () => {
+  it("Should not save the edit", () => {
     render(<TodoList {...mockProps} />);
     const btnEdit = screen.getByTestId("btn-edit");
     fireEvent.click(btnEdit);
@@ -36,13 +40,17 @@ describe("Todo List", () => {
     fireEvent.click(btnCancel);
   });
 
-  it("implements strike functionality", () => {
+  it("Should strike out the item", () => {
     render(<TodoList {...mockProps} />);
 
     const checkBox = screen.getByRole("checkbox");
     fireEvent.click(checkBox);
 
-    expect(mockUpdateItemFromList).toHaveBeenCalled();
+    expect(mockUpdateItemFromList).toHaveBeenCalledWith({
+      checked: true,
+      id: 1,
+      name: "Hello2",
+    });
   });
 });
 
