@@ -1,88 +1,125 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Button, Grid } from "@mui/material";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import { useAppStyles } from "./App.style";
 import { TodoList } from "./components/TodoList";
 
 export type AppProps = {
-  deleteFn: () => void;
-  handleChange: () => void;
+  deleteItemFromList: () => void;
+  updateItemFromList: () => void;
+};
+
+export type TodoListItemType = {
+  id: number;
+  name: string;
+  checked: boolean;
 };
 
 function App(): JSX.Element {
   const [inputText, setInputText] = useState<string>("");
-  const [list, setList] = useState<Array<string>>([]);
+  const [todoList, setTodoList] = useState<Array<TodoListItemType>>([]);
 
   const classes = useAppStyles();
-  const addToList = (): void => {
-    const newList = [...list, inputText];
-    setList(newList);
-    localStorage.setItem("list", JSON.stringify(newList));
+
+  const addItemToList = (): void => {
+    const newList = [
+      ...todoList,
+      { id: new Date().getTime(), name: inputText.trim(), checked: false },
+    ];
+    setTodoList(newList);
+    saveToLocalStorage("todoList", newList);
     setInputText("");
   };
 
-  const deleteFn = (id: number): void => {
-    const updatedList = [...list];
-    updatedList.splice(id, 1);
-    setList(updatedList);
-    localStorage.setItem("list", JSON.stringify(updatedList));
+  const deleteItemFromList = (id: number): void => {
+    const updatedList = todoList.filter((item) => item.id !== id);
+    setTodoList(updatedList);
+    saveToLocalStorage("todoList", updatedList);
   };
 
-  const handleChange = (id: number, editItem: string | null): void => {
-    const updatedList = [...list];
-    updatedList[id] = editItem?.trim() ?? "";
-    setList(updatedList);
-    localStorage.setItem("list", JSON.stringify(updatedList));
+  const updateItemFromList = (item: TodoListItemType): void => {
+    const updatedList = [...todoList];
+    const listIndex = todoList.findIndex((listItem) => listItem.id === item.id);
+    updatedList[listIndex] = item;
+    setTodoList(updatedList);
+    saveToLocalStorage("todoList", updatedList);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    setInputText(inputValue);
+  };
+
+  const clearTodoList = () => {
+    setTodoList([]);
+    saveToLocalStorage("todoList", []);
+  };
+
+  const saveToLocalStorage = (key: string, value: Array<TodoListItemType>) => {
+    localStorage.setItem(key, JSON.stringify(value));
   };
 
   useEffect(() => {
-    setList(JSON.parse(localStorage.getItem("list") || "[]"));
+    setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
   }, []);
 
   return (
-    <div className="App">
-      <Typography
-        textAlign="center"
-        m={3}
-        variant="h3"
-        data-testid="heading"
-        marginTop="1"
-      >
+    <>
+      <Typography data-testid="heading" m={3} textAlign="center" variant="h3">
         Todo-List
       </Typography>
-      <Box display="flex" justifyContent="center" alignItems="center">
+      <Grid display="flex" justifyContent="center" alignItems="center">
         <TextField
-          inputProps={{ "data-testid": "input-text" }}
           color="secondary"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value.trim())}
           focused
+          inputProps={{ "data-testid": "input-text" }}
+          onChange={handleInputChange}
+          value={inputText}
         />
         <Button
-          data-testid="btn-add"
-          variant="contained"
-          disabled={!inputText}
           color="secondary"
-          onClick={addToList}
+          data-testid="btn-add"
+          disabled={!inputText.trim()}
+          onClick={addItemToList}
           sx={{ m: 1 }}
+          variant="contained"
         >
           Add
         </Button>
-      </Box>
-      <List data-testid="list" className={classes.list}>
-        {list.map((item, index) => (
-          <TodoList
-            key={index}
-            item={item}
-            deleteFn={deleteFn}
-            id={index}
-            handleChange={handleChange}
-          />
-        ))}
-      </List>
-    </div>
+      </Grid>
+      <div className={classes.listContainer}>
+        <List data-testid="todoList" className={classes.list}>
+          {Boolean(todoList.length) ? (
+            todoList.map((item) => (
+              <TodoList
+                item={item}
+                key={item.id}
+                deleteItemFromList={deleteItemFromList}
+                updateItemFromList={updateItemFromList}
+              />
+            ))
+          ) : (
+            <Typography data-testid="initial-msg" m={3} textAlign="center">
+              Make a todoList
+            </Typography>
+          )}
+        </List>
+      </div>
+      {Boolean(todoList.length) && (
+        <Grid display="flex" justifyContent="center">
+          <Button
+            color="secondary"
+            data-testid="btn-deleteAll"
+            onClick={clearTodoList}
+            variant="contained"
+          >
+            Delete All
+          </Button>
+        </Grid>
+      )}
+    </>
   );
 }
 

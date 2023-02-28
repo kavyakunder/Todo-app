@@ -1,117 +1,133 @@
 import React, { useState } from "react";
-import { Button, ListItem, TextField, Grid } from "@mui/material";
+import { Button, ListItem, TextField, Grid, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useTodoListStyles } from "./TodoList.style";
+import { TodoListItemType } from "../App";
 
 export type TodoListProps = {
-  deleteFn: (id: number) => void;
-  handleChange: (id: number, editItem: string | null) => void;
-  id: number;
-  item: string;
+  item: TodoListItemType;
+  deleteItemFromList: (id: number) => void;
+  updateItemFromList: (item: TodoListItemType) => void;
 };
 
 export const TodoList = ({
-  deleteFn,
-  handleChange,
-  id,
   item,
+  deleteItemFromList,
+  updateItemFromList,
 }: TodoListProps) => {
   const [editItem, setEditItem] = useState<string | null>(null);
+  const classes = useTodoListStyles();
 
-  const handleEdit = () => {
-    setEditItem(item);
+  const { name, id, checked } = item;
+
+  const handleEditItem = () => {
+    setEditItem(name);
   };
 
   const handleCancel = () => {
     setEditItem(null);
   };
 
-  const handleSave = (id: number) => {
-    handleChange(id, editItem);
+  const handleSave = () => {
+    updateItemFromList({ ...item, name: editItem?.trim() || "" });
     setEditItem(null);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditItem(event.target.value.trim());
+  const handleEditInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const inputValue = event.target.value;
+    setEditItem(inputValue);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    updateItemFromList({
+      ...item,
+      checked: event.target.checked,
+    });
   };
 
   return (
-    <>
+    <Grid
+      alignItems="center"
+      container
+      direction="row"
+      justifyContent="space-between"
+      spacing={2}
+    >
       {editItem ? (
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Grid item xs={4}>
+        <>
+          <Grid item xs={4} marginLeft={2}>
             <TextField
               inputProps={{ "data-testid": "input-edit" }}
+              onChange={handleEditInputChange}
               value={editItem}
-              onChange={handleInputChange}
             />
           </Grid>
           <Grid container item xs={4} justifyContent="flex-end">
             <Grid item xs={4}>
               <Button
-                data-testid="btn-save"
                 color="success"
-                onClick={() => handleSave(id)}
-                disabled={!editItem}
+                data-testid="btn-save"
+                disabled={!editItem.trim()}
+                onClick={handleSave}
               >
                 <CheckCircleIcon />
               </Button>
             </Grid>
             <Grid item xs={4}>
               <Button
-                data-testid="btn-cancel"
                 color="error"
+                data-testid="btn-cancel"
                 onClick={handleCancel}
               >
                 <CancelIcon />
               </Button>
             </Grid>
           </Grid>
-        </Grid>
+        </>
       ) : (
         <>
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid item xs={8} paddingLeft={10}>
+          <Grid item xs={8} paddingLeft={10}>
+            <Grid
+              display="flex"
+              className={checked ? classes.listChecked : classes.listUnchecked}
+            >
+              <Checkbox
+                checked={checked}
+                color="secondary"
+                data-testid="checkbox"
+                onChange={handleCheckboxChange}
+              />
               <ListItem data-testid="list-item" key={id}>
-                {item}
+                {name}
               </ListItem>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end">
-              <Grid item xs={4}>
-                <Button
-                  data-testid="btn-edit"
-                  color="info"
-                  onClick={handleEdit}
-                >
-                  <EditIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button data-testid="btn-delete" onClick={() => deleteFn(id)}>
-                  <DeleteForeverIcon
-                    style={{ color: "#2A3038" }}
-                    className="btn-black"
-                  />
-                </Button>
-              </Grid>
+          </Grid>
+          <Grid container item xs={4} justifyContent="flex-end">
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-edit"
+                color="info"
+                onClick={handleEditItem}
+              >
+                <EditIcon />
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                data-testid="btn-delete"
+                onClick={() => deleteItemFromList(id)}
+              >
+                <DeleteForeverIcon className={classes.deleteIcon} />
+              </Button>
             </Grid>
           </Grid>
         </>
       )}
-    </>
+    </Grid>
   );
 };
