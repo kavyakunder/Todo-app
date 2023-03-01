@@ -1,6 +1,3 @@
-/// <reference types="cypress" />
-//added above line for temporarily. Remove it when get a solution.
-
 describe("Todo-List", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
